@@ -1,0 +1,22 @@
+export function isPlainObject(target: unknown): boolean {
+  return target?.constructor === Object
+}
+
+const nullBodyStatus = new Set([ 101, 204, 205, 304 ])
+
+export function isNullBody(status: number): boolean {
+  return nullBodyStatus.has(status)
+}
+
+export async function asyncForEach<T = unknown>(array: T[], callback: (item: T, index: number, array: T[]) => Promise<boolean | void>): Promise<void> {
+  for (let i = 0; i < array.length; i++) {
+    const result = await callback(array[i], i, array)
+    if (result === false) {
+      return
+    }
+  }
+}
+
+export function getSetCookies(setCookieString: string): string[] {
+  return setCookieString.match(/[^=, ]+=[^;]*(; ([^=, ]+=[^;]+|secure|httponly))*/gi)
+}
