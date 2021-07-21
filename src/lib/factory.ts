@@ -17,7 +17,6 @@ import {
 } from './type'
 import { FetchError } from './error'
 import {
-  ACCEPT,
   CONTENT_TYPE,
   COOKIE,
   SET_COOKIE,
@@ -68,10 +67,6 @@ function mergeOptions(defaultOptions: FetchDefaultOptions, options: FetchOptions
   }
   ;[ 'json', 'form', 'data', 'hooks' ].forEach(x => delete opts[x])
   
-  if (!headers[ACCEPT] && opts.type === 'json') {
-    headers[ACCEPT] = 'application/json'
-  }
-
   const beforeRequestHooks = defaultOptions.hooks.beforeRequest as BeforeRequestHook[]
   return beforeRequestHooks.reduce((_opts, fn) => fn(_opts), opts)
 }
