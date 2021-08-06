@@ -155,22 +155,23 @@ async function consumeResponse(response: Response, options: FetchOptions, defaul
 
   try {
     result.body = await consumeBody(response, ok ? options.type : 'auto')
-  } catch (error: unknown) {
-    result.body = response.body
+    if (!ok) {
+      throw new FetchError(`HTTP ${ statusText || 'Error' }`, 'invalid-status', result)
+    }
+    const afterResponseHooks = defaultOptions.hooks.afterResponse as AfterResponseHook[]
+    return await afterResponseHooks.reduce<unknown>(async (_result, fn) => fn(await _result), Promise.resolve(result))
+  } catch (err: unknown) {
+    result.body = result.body || response.body
+    const error = err as Error
     const responseErrorHooks = defaultOptions.hooks.responseError as ResponseErrorHook[]
     for (const hook of responseErrorHooks) {
       try {
-        return await hook(result, error as Error)
+        return await hook(result, error)
       } catch (_) {
       }
     }
-    throw new FetchError((error as Error).message, 'response-error')
+    throw error instanceof Error ? error : new FetchError((error as Error).message || error, 'response-error', result)
   }
-  if (!ok) {
-    throw new FetchError(`HTTP ${ statusText || 'Error' }`, 'invalid-status')
-  }
-  const afterResponseHooks = defaultOptions.hooks.afterResponse as AfterResponseHook[]
-  return await afterResponseHooks.reduce<unknown>(async (_result, fn) => fn(await _result), Promise.resolve(result))
 }
 
 async function consumeBody(response: Response, type: string): Promise<unknown> {
