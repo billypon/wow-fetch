@@ -39,10 +39,10 @@ The URL to request.
 
 ```js
 await fetch('https://example.com/?query=a b') // => https://example.com/?query=a%20b
-await fetch('https://example.com/', { params: { query: 'a b'} }) // => https://example.com/?query=a+b
+await fetch('https://example.com/', { query: { query: 'a b'} }) // => https://example.com/?query=a+b
 
-// The query string is overridden by `params`
-await fetch('https://example.com/?query=a b', { params: { query: 'a b' } }) // => https://example.com/?query=a+b
+// The query string is overridden by `query`
+await fetch('https://example.com/?query=a b', { query: { query: 'a b' } }) // => https://example.com/?query=a+b
 ```
 
 ##### options
@@ -75,7 +75,7 @@ headers.set('foo', 'bar')
 fetch('https://httpbin.org/anything', { headers })
 ```
 
-###### params
+###### query
 
 Type: `URLSearchParams` | `Record<string, string>` \
 Default: `null`

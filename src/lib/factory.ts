@@ -72,7 +72,7 @@ function mergeOptions(defaultOptions: FetchDefaultOptions, options: FetchOptions
 }
 
 function mergeOptionProps(options: FetchOptions, defaultOptions: FetchDefaultOptions): void {
-  ;[ 'headers', 'params', 'form', 'data' ].forEach(x => {
+  ;[ 'headers', 'query', 'form', 'data' ].forEach(x => {
     if (options[x] && isPlainObject(defaultOptions[x])) {
       if (isPlainObject(options[x])) {
         options[x] = { ...defaultOptions[x], ...options[x] }
@@ -109,11 +109,11 @@ function mergeUrl(baseUrl: string, url: string): string {
   return `${ baseUrl }${ !/\/$/.test(baseUrl) && !/^\//.test(url) ? '/' : '' }${ url }`
 }
 
-function mergeParams(url: string, params: URLSearchParams, override = true): string {
-  if (!params) {
+function mergeParams(url: string, query: URLSearchParams, override = true): string {
+  if (!query) {
     return url
   }
-  const queryString = params ? params.toString() : ''
+  const queryString = query ? query.toString() : ''
   if (queryString) {
     const index = override ? url.indexOf('?') : -1
     const split = override
@@ -223,8 +223,8 @@ export function createInstance(nextOptions: Partial<FetchDefaultOptions>, prevOp
 
   const fetch = async function(url: string, opts?: Partial<FetchOptions>) {
     const options = mergeOptions(defaultOptions, opts as FetchOptions, url)
-    const params = options.params instanceof URLSearchParams ? options.params : new URLSearchParams(options.params as FetchParams)
-    const wholeUrl = mergeUrl(defaultOptions.baseUrl, mergeParams(options.url, params))
+    const query = options.query instanceof URLSearchParams ? options.query : new URLSearchParams(options.query as FetchParams)
+    const wholeUrl = mergeUrl(defaultOptions.baseUrl, mergeParams(options.url, query))
 
     if (options.cookies) {
       const cookieString = options.cookies.getCookieStringSync(wholeUrl)

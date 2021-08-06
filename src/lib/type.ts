@@ -33,7 +33,7 @@ export interface FetchOptions {
   follow: number
   agent: Agent
   // wow-fetch extension options
-  params: FetchParams | URLSearchParams
+  query: FetchParams | URLSearchParams
   json: unknown
   form: string | FetchParams | URLSearchParams
   data: FormData
