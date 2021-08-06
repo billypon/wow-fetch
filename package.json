@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "main": "cjs/index.js",
   "module": "es/index.js",
+  "homepage": "https://github.com/billypon/wow-fetch",
   "scripts": {
     "build": "rm -rf dist && npm run build:es && npm run build:cjs",
     "build:es": "tsc -p . -m es6 -d --outDir dist/es",
