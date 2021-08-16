@@ -48,8 +48,8 @@ function mergeOptions(defaultOptions: FetchDefaultOptions, options: FetchOptions
     } else {
       Object.entries(opts.headers).forEach(([ key, value ]) => headers[key] = value)
     }
-    opts.headers = headers
   }
+  opts.headers = headers
 
   if ([ 'post', 'put', 'patch' ].includes(opts.method)) {
     if (opts.json) {
