@@ -3,6 +3,7 @@ export function isPlainObject(target: unknown): boolean {
 }
 
 const nullBodyStatus = new Set([ 101, 204, 205, 304 ])
+export const redirectStatus = new Set([ 300, 301, 302, 303, 307, 308 ])
 
 export function isNullBody(status: number): boolean {
   return nullBodyStatus.has(status)

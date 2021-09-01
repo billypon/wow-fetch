@@ -2,7 +2,7 @@ import Fetch, { Headers, Response, RequestInit, BodyInit } from 'node-fetch'
 import * as FormData from 'form-data'
 import { Cookie } from 'tough-cookie'
 
-import { isPlainObject, isNullBody, asyncForEach } from './util'
+import { isPlainObject, isNullBody, asyncForEach, redirectStatus } from './util'
 import {
   FetchOptions,
   FetchDefaultOptions,
@@ -155,7 +155,7 @@ async function consumeResponse(response: Response, options: FetchOptions, defaul
 
   try {
     result.body = await consumeBody(response, ok ? options.type : 'auto')
-    if (!ok) {
+    if (!ok && !redirectStatus.has(status) && options.redirect !== 'manual') {
       throw new FetchError(`HTTP ${ status } ${ statusText || 'Error' }`, 'invalid-status', result)
     }
     const afterResponseHooks = defaultOptions.hooks.afterResponse as AfterResponseHook[]
