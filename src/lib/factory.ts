@@ -156,7 +156,7 @@ async function consumeResponse(response: Response, options: FetchOptions, defaul
   try {
     result.body = await consumeBody(response, ok ? options.type : 'auto')
     if (!ok && !redirectStatus.has(status) && options.redirect !== 'manual') {
-      throw new FetchError(`HTTP ${ status } ${ statusText || 'Error' }`, 'invalid-status', result)
+      throw new FetchError(`HTTP ${ status }${ status.toString() === statusText ? '' : ' ' + (statusText || 'Error') }`, 'invalid-status', result)
     }
     const afterResponseHooks = defaultOptions.hooks.afterResponse as AfterResponseHook[]
     return await afterResponseHooks.reduce<unknown>(async (_result, fn) => fn(await _result), Promise.resolve(result))
