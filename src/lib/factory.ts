@@ -190,13 +190,16 @@ async function consumeBody(response: Response, type: string): Promise<unknown> {
     case 'array-buffer':
       return response.arrayBuffer()
     case 'auto':
-      const [ type ] = response.headers.get(CONTENT_TYPE).split(';')
-      const [ mainType, subType ] = type.split('/')
-      switch (mainType) {
-        case 'text':
-          return response.text()
-        case 'application':
-          return subType === 'json' ? response.json() : response.blob()
+      const contentType = response.headers.get(CONTENT_TYPE)
+      if (contentType) {
+        const [ type ] = contentType.split(';')
+        const [ mainType, subType ] = type.split('/')
+        switch (mainType) {
+          case 'text':
+            return response.text()
+          case 'application':
+            return subType === 'json' ? response.json() : response.blob()
+        }
       }
   }
   return Promise.resolve(response.body)
