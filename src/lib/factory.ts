@@ -132,7 +132,7 @@ async function consumeResponse(response: Response, options: FetchOptions, defaul
   const headers = Object.fromEntries(response.headers.entries())
 
   if (options.cookies && response.headers.has(SET_COOKIE)) {
-    const cookies = response.headers.raw()[SET_COOKIE]
+    const cookies = response.headers.raw()[SET_COOKIE].filter(x => /^[^=]+=/.test(x))
     cookies.forEach(x => {
       const cookie = Cookie.parse(x)
       options.cookies.setCookieSync(cookie, url)
