@@ -189,6 +189,8 @@ async function consumeBody(response: Response, type: string): Promise<unknown> {
       return response.buffer()
     case 'array-buffer':
       return response.arrayBuffer()
+    case 'stream':
+      return response
     case 'auto':
       const contentType = response.headers.get(CONTENT_TYPE)
       if (contentType) {
