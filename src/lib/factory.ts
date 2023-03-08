@@ -2,7 +2,7 @@ import Fetch, { Headers, Response, RequestInit, BodyInit } from 'node-fetch'
 import * as FormData from 'form-data'
 import { Cookie } from 'tough-cookie'
 
-import { isPlainObject, isNullBody, asyncForEach, redirectStatus } from './util'
+import { isPlainObject, isNullBody, asyncForEach, asyncReduce, redirectStatus } from './util'
 import {
   FetchOptions,
   FetchDefaultOptions,
@@ -159,7 +159,7 @@ async function consumeResponse(response: Response, options: FetchOptions, defaul
       throw new FetchError(`HTTP ${ status }${ status.toString() === statusText ? '' : ' ' + (statusText || 'Error') }`, 'invalid-status', result)
     }
     const afterResponseHooks = defaultOptions.hooks.afterResponse as AfterResponseHook[]
-    return await afterResponseHooks.reduce<unknown>(async (_result, fn) => fn(await _result), Promise.resolve(result))
+    return await asyncReduce(afterResponseHooks, (value, fn) => fn(value), result)
   } catch (err: unknown) {
     result.body = result.body || response.body
     const error = err as Error

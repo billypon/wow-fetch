@@ -18,6 +18,14 @@ export async function asyncForEach<T = unknown>(array: T[], callback: (item: T, 
   }
 }
 
+export async function asyncReduce<T = unknown>(array: T[], callback: (value: unknown, current: T) => Promise<unknown>, initial?: unknown): Promise<unknown> {
+  let value = initial
+  for (const item of array) {
+    value = await callback(value, item)
+  }
+  return value
+}
+
 export function getSetCookies(setCookieString: string): string[] {
   return setCookieString.match(/[^=, ]+=[^;]*(; ([^=, ]+=[^;]+|secure|httponly))*/gi)
 }
